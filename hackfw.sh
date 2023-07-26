@@ -13,7 +13,7 @@ if [ ! -e "phack" -o ! -e "splice" -o ! -e "bgrep" ]; then
     exit 0;
 fi
 
-if ! ./phack -m "baks r ok"; then
+if ! ./phack -m "baks r ok" $1; then
     echo "Sorry, there doesn't seem to be a device using the ST2205U chipset"
     echo "at $1."
     exit 1;
@@ -74,4 +74,4 @@ echo "it again, go into 'update mode' and press enter. To quit, use ctrl-c."
 read
 echo "Ok, just a sec..."
 sleep 5
-./phack -l test.png
+./phack -l test.png $1

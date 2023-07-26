@@ -77,4 +77,5 @@ ROL     D0371
   brick your device.
 - If you're sure it'll work, you can try the hackfw.sh script for real.
 - Rejoice if you see the 'It Works!' image :)
-
+- Zip up the m_yourmachine directory and mail it to 
+  me <picframe@spritesmods.com>, if you like.
