@@ -7,6 +7,8 @@ typedef struct {
     int proto;
     char* buff;
     char* oldpix;
+    int offx;
+    int offy;
 } st2205_handle;
 
 //Opens the device pointed to by dev (which is /dev/sdX) and reads its 

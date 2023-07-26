@@ -7,6 +7,9 @@
 ;routine that discerns the address that's written to fails.
 ;This way, we can splice our own check inthere too.
 
+;Watch out & be carefull with bloating this: one of the devices (the Coby)
+;only has 230 bytes free to cram this in!
+
 ;check magic write to address 4400
 start	lda CMP_VAR1
 	cmp #$22
@@ -62,7 +65,7 @@ bloff	lda $03
 
 
 IF CTRTYPE=1 ;UC1697V
-;set addr
+;set visible window
 setaddr	lda #$F4
 	sta $8000
 	lda $201
@@ -82,6 +85,19 @@ setaddr	lda #$F4
 	sta $8000
 	lda $204
 	sta $8000
+
+;reset addr to (0,0)
+	lda #$00
+	sta $8000
+	lda #$10
+	sta $8000
+	lda #$60
+	sta $8000
+	lda #$70
+	sta $8000
+	
+;	lda #$AF
+;	sta $8000
 
 	bra packetend
 ENDC
@@ -168,4 +184,5 @@ nowaitpacket	pla
 	db CONF_YRES
 	db CONF_BPP
 	db CONF_PROTO	
-
+	db OFFX
+	db OFFY

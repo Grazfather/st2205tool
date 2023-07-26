@@ -27,7 +27,6 @@
 #include "st2205.h"
 #include <sys/mman.h>
 
-
 #define BUFF_SIZE 0x10000
 
 /*
@@ -56,6 +55,8 @@ typedef struct {
     unsigned char height;
     char bpp;
     char proto;
+    char xoff;
+    char yoff;
 } fw_descriptor;
 
 /*
@@ -175,13 +176,13 @@ static int enddata(char *buff, int p) {
 }
 
 
-static int pcf8833_setxy(char *buff, int p, int xs, int xe, int ys, int ye) {
+static int pcf8833_setxy(st2205_handle *h,char *buff, int p, int xs, int xe, int ys, int ye) {
     p=enddata(buff,p);
     buff[p]=1;
-    buff[p+1]=xs+4;
-    buff[p+2]=xe+4;
-    buff[p+3]=ys+4;
-    buff[p+4]=ye+4;
+    buff[p+1]=xs+h->offx;
+    buff[p+2]=xe+h->offx;
+    buff[p+3]=ys+h->offy;
+    buff[p+4]=ye+h->offy;
     p+=64;
     return p;
 }
@@ -228,7 +229,7 @@ static void pcf8833_send_partial(st2205_handle *h,char *pixinfo,int xs, int ys, 
 	xe+=(xe-xs+1)&1;
     }
     p=0;
-    p=pcf8833_setxy(h->buff,0,xs,xe,ys,ye);
+    p=pcf8833_setxy(h,h->buff,0,xs,xe,ys,ye);
     for (y=ys; y<=ye; y++) {
 	for (x=xs; x<=xe; x++) {
 	    if (h->bpp==16) {
@@ -347,5 +348,7 @@ st2205_handle *st2205_open(char *dev) {
     r->bpp=b->bpp;
     r->proto=b->proto;
     r->oldpix=NULL;
+    r->offx=b->offx;
+    r->offy=b->offy;
     return r;
 }
