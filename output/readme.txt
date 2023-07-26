@@ -14,6 +14,5 @@ Ultra-short howto:
   (with /dev/sdX being the device your photo frame is connected to)
 
 
-** lcd4linux-svn-st2205.patch **
-This is a patch against the current (20 jan '08) SVN version of LCD4Linux. 
-Apply, compile, see the example for configuration.
+** lcd4linux **
+included in latest svn release and upcomming v0.11.0 release

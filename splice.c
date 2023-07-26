@@ -27,12 +27,12 @@
 int main(int argc, char **argv) {
     int f1,f2,r;
     long size;
-    long offset;
+    unsigned int offset;
     char *buff;
     struct stat sbuff;
     
     if (argc!=4) {
-	printf("Usage: %s file1 file2 offset\nOverwrites the byte in file1 with those of file2, starting at offset.\n");
+	printf("Usage: %s file1 file2 offset\nOverwrites the byte in file1 with those of file2, starting at offset.\n", argv[0]);
 	exit(0);
     }
     

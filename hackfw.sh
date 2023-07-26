@@ -39,7 +39,7 @@ if ! ./phack -m "baks r ok" $1; then
     exit 1;
 fi
 
-if [ -z "$1" ]; then
+if [ -z "$2" ]; then
     echo
     echo "Ok, first off all, we're going to backup the firmware and memory of your"
     echo "device to fwimage.bak and memimage.bak. Please save fwimage.bak, you"

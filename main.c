@@ -171,8 +171,8 @@ int main(int argc, char** argv) {
 //	printf(" -l: send png- to framebuffer mem (hacked fw only)\n");
 	printf(" file: file to dump to or upload from\n");
 	printf(" device: /dev/sdX (default: /dev/sda)\n");
-	printf("-l accepts directories too, in which case it'll proceed to send every file in the\n");
-	printf("directory to the LCD.\n");
+//	printf("-l accepts directories too, in which case it'll proceed to send every file in the\n");
+//	printf("directory to the LCD.\n");
 	exit(0);
     }
     
@@ -232,7 +232,7 @@ int main(int argc, char** argv) {
 	    fprintf(stderr,".");
 	}
 	fprintf(stderr,"\n");
-	printf("Dump: %i paged dumped.\n");
+	printf("Memory dumped.\n");
     } else if (mode==M_FDMP) {
 	//Use a trick to get the 64K of firmware: if we request the data starting
 	//at (2M-64K), the data gets read from a mirror of the flash, position 0.

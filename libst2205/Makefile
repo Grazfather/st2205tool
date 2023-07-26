@@ -1,11 +1,12 @@
-SRC	=	main.c
-OBJ	=	main.o
-FLAGS	=	-g -fPIC
+SRC	=	st2205.c
+OBJ	=	st2205.o
+HEADERS	=	st2205.h
+CFLAGS	=	-W -Wall -g -fPIC -O2
 LIBS	=	
 
 all:	libst2205.so
 
-libst2205.so: 	$(OBJ) $(SRC) 
+libst2205.so:	$(OBJ) $(SRC) $(HEADERS) 
 	ar -rv libst2205.a $(OBJ) 
 	gcc -shared -Wl,-soname,libst2205.so.1 -o libst2205.so $(OBJ) $(LIBS)
 
