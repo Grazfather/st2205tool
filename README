@@ -1,7 +1,11 @@
 Short readme:
 
+- If your device already is hacked with an earlier version of the firmware,
+  please flash back your original firmware: go to the earlier versions dir 
+  and do a './phack -uf fwimage.bak'.
 - Use make to compile the binaries. You'll probably need the development
   headers and libraries of libgd for this, preferably v2.
+- Install libraries: run 'make install' as root
 - connect your device and observe (e.g. by running dmesg) the device node
   it's connected to. Look for e.g.:
   SCSI device sda: 4096 512-byte hdwr sectors (2 MB)

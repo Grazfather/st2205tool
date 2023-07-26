@@ -75,6 +75,10 @@ ROL     D0371
 - The hacked firmware now is in the 'fwimage.bin'-file. Please revise the
   patched areas around PATCH_AT and EMPTY_AT: a mistake here could in theory
   brick your device.
+- Fill out CONF_XRES, CONF_YRES with the horizontal and vertical resolution of
+  your device. Fill out CONF_BPP with the bits per pixel of the device 
+  (experiment, only 16bpp and 12bpp are supported for now and your device probably
+  is one of the two.) Leave CONF_PROTO at 0, which is the PCF8833-protocol.
 - If you're sure it'll work, you can try the hackfw.sh script for real.
 - Rejoice if you see the 'It Works!' image :)
 - Zip up the m_yourmachine directory and mail it to 

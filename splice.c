@@ -25,8 +25,9 @@
 
 
 int main(int argc, char **argv) {
-    int f1,f2,r,size;
-    int offset;
+    int f1,f2,r;
+    long size;
+    long offset;
     char *buff;
     struct stat sbuff;
     

@@ -18,6 +18,7 @@ for x in m_*; do
     echo "Assembling $x..."
     cp $x/spec .
     
+    do_assemble parseusb.asm $x/parseusb.bin
     do_assemble hack.asm $x/hack.bin
     do_assemble hack_jmp.asm $x/hack_jmp.bin
     do_assemble lookforme.asm $x/lookforme.bin

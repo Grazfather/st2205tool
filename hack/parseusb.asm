@@ -1,28 +1,13 @@
+;The LCD of this device isn't connected to the perfectly good internal LCD
+;subsystem, but is an external one with its own controller. It seems to be
+;connected to the dataspace when DRRH==3. Commands to it go to $8000, data
+;to $c000. The controller is PCF8833-compatible btw, same type as some
+;Nokia 6100s (and other Nokias) have.
+
     CPU 65c02
     OUTPUT HEX
     INCLUDE spec
-    * = EMPTY_AT+$4000
-
-;The routine in the existing firmware is patched to jump here if the
-;routine that discerns the address that's written to fails.
-;This way, we can splice our own check inthere too.
-
-;check magic write to address 4400
-start	lda CMP_VAR1
-	cmp #$22
-	bne nomagic
-	lda CMP_VAR2
-	cmp #$00
-	bne nomagic
-	bra gotcha
-;Nope? Do what the original routine did & bail out.
-nomagic lda #$ff
-	ldx #$ff
-	jmp PATCH_AT+$4004
-
-;ack usb wossname
-gotcha  lda #$04
-	sta $73
+    * = $2000
 
 ;Push registers	
 	lda $35
@@ -45,40 +30,28 @@ waitpacket lda $73
 	cmp #$1
 	beq setaddr
 	cmp #$2
-	beq blon
-	cmp #$3
-	beq bloff
+	beq setbl
 	bra packetend
 
-blon	lda $03
-	and #($ff-$04)
-	sta $03
-	bra packetend
-
-bloff	lda $03
-	ora #$04
-	sta $03
-	bra packetend
-
+;nothing yet...	
+setbl  bra packetend
 
 ;set addr
-setaddr	lda #$2A
+setaddr	lda #$2b
 	sta $8000
 	lda $201
 	sta $c000
 	lda $202
 	sta $c000
 
-	lda #$2B
+	lda #$2a
 	sta $8000
 	lda $203
 	sta $c000
 	lda $204
 	sta $c000
-
 	lda #$2c
 	sta $8000
-
 	bra packetend
 
 ;copy packet to framebuff. Len is in $201
@@ -124,22 +97,6 @@ packetend sec
 ;restore registers
 nowaitpacket	pla
 	sta $35
-
-
-;send ack
-	lda #$00
-	jsr SEND_CSW+0x4000
-
-;and return as a winner :)
-	lda #$ff
-	ldx #$ff
-	jmp PATCH_AT+$4004
-
-
-	db "H","4","C","K"
-	db 1 ;version of info block
-	db CONF_XRES
-	db CONF_YRES
-	db CONF_BPP
-	db CONF_PROTO	
+	rts
+	
 

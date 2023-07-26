@@ -1,7 +1,9 @@
+** mplayer-1.0rc2-libst2205.patch **
 This is a patch against MPlayer v1.0rc2 to add support for a hacked ST2205
 device as a video output device.
 
 Ultra-short howto:
+- Make sure libst2205 is installed
 - Get & unpack MPlayer (www.mplayerhq.hu)
 - Apply patch
 - ./configure && ./make
@@ -10,3 +12,6 @@ Ultra-short howto:
   (with /dev/sdX being the device your photo frame is connected to)
 
 
+** lcd4linux-svn-st2205.patch **
+This is a patch against the current (20 jan '08) SVN version of LCD4Linux,
+which 

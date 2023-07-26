@@ -21,7 +21,12 @@ fi
 
 echo
 echo "Ok, first off all, we're going to backup the firmware and memory of your"
-echo "device to fwimage.bak and memimage.bak."
+echo "device to fwimage.bak and memimage.bak. Please save fwimage.bak, you"
+echo "need it to flash a newer version into your unit."
+if [ -e fwimage.bak ]; then
+    echo "Found existing fwimage.bak, moving to fwimage.bak.old";
+    mv fwimage.bak fwimage.bak.old
+fi
 ./phack -df fwimage.bak $1  > /dev/null || exit 1 
 ./phack -d memimage.bak $1  > /dev/null || exit 1
 
@@ -47,7 +52,9 @@ if [ $match = false ]; then
     echo "Sorry, I couldn't find a matching device profile. If you want to give "
     echo "creating it yourself a shot, please read ./hack/newhack.txt for more"
     echo "info."
-    echo "(Btw: this can also mean your device already has a hacked firmware.)"
+    echo "(Btw: this can also mean your device already has a hacked firmware. If"
+    echo "you want to upgrade your device using this script, please flash back"
+    echo "the fwimage.bak the previous version saved first.)"
     exit 1
 fi
 
@@ -74,4 +81,4 @@ echo "it again, go into 'update mode' and press enter. To quit, use ctrl-c."
 read
 echo "Ok, just a sec..."
 sleep 5
-./phack -l test.png $1
+LD_LIBRARY_PATH=./libst2205 ./setpic/setpic $1 test.png
