@@ -61,6 +61,31 @@ bloff	lda $03
 	bra packetend
 
 
+IF CTRTYPE=1 ;UC1697V
+;set addr
+setaddr	lda #$F4
+	sta $8000
+	lda $201
+	sta $8000
+
+	lda #$F5
+	sta $8000
+	lda $203
+	sta $8000
+
+	lda #$F6
+	sta $8000
+	lda $202
+	sta $8000
+
+	lda #$F7
+	sta $8000
+	lda $204
+	sta $8000
+
+	bra packetend
+ENDC
+IF CTRTYPE=0 ;PCF8833
 ;set addr
 setaddr	lda #$2A
 	sta $8000
@@ -80,6 +105,7 @@ setaddr	lda #$2A
 	sta $8000
 
 	bra packetend
+ENDC
 
 ;copy packet to framebuff. Len is in $201
 copy2fb	lda $201
