@@ -1,7 +1,8 @@
     CPU 65c02
     OUTPUT HEX
-    * = $6bbb
+    INCLUDE spec
+    * = PATCH_AT+$4000
 
 ;This gets patched into the existing usb routines.
-    jmp $07A00
+    jmp EMPTY_AT+$4000
     nop
