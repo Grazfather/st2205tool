@@ -28,3 +28,13 @@ probably work.
 
 DISCLAIMER: Use at your own risk. I'm not responsible for any damage that occurs 
 by running my programs or following my instructions.
+
+
+FAQ:
+
+Q: I have installed everything by doing a 'make install' as root, but programs
+   still can't find libst2205.so.1! What am I doing wrong?
+A: Libst2205.so is installed into /usr/local/lib. Make sure your /etc/ld.so.conf
+   contains the line '/usr/local/lib' and then run (as root) ldconfig.
+
+
