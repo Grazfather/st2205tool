@@ -1,0 +1,330 @@
+Crasm LYB 1.3:                                                   page  1
+
+                         1      CPU 65c02
+                         2      OUTPUT HEX
+                         3      INCLUDE spec
+  7EF4                   4      * = EMPTY_AT+$4000
+                         5  
+                         6  ;The routine in the existing firmware is patched
+to jump here if the
+                         7  ;routine that discerns the address that's writte
+n to fails.
+                         8  ;This way, we can splice our own check inthere t
+oo.
+                         9  
+                        10  ;Watch out & be carefull with bloating this: one
+of the devices (the Coby)
+                        11  ;only has 230 bytes free to cram this in!
+                        12  
+                        13  ;check magic write to address 4400
+7EF4 AD7C03             14  start   lda CMP_VAR1
+7EF7 C922               15          cmp #$22
+7EF9 D009               16          bne nomagic
+7EFB AD7D03             17          lda CMP_VAR2
+7EFE C900               18          cmp #$00
+7F00 D002               19          bne nomagic
+7F02 8007               20          bra gotcha
+                        21  ;Nope? Do what the original routine did & bail o
+ut.
+7F04 A9FF               22  nomagic lda #$ff
+7F06 A2FF               23          ldx #$ff
+7F08 4CF373             24          jmp PATCH_AT+$4004
+                        25  
+                        26  ;ack usb wossname
+7F0B A904               27  gotcha  lda #$04
+7F0D 8573               28          sta $73
+                        29  
+                        30  ;Push registers 
+7F0F A535               31          lda $35
+7F11 48                 32          pha
+                        33  
+                        34  ;select lcd
+7F12 A903               35          lda #$3
+7F14 8535               36          sta $35
+                        37  
+7F16 9C6E03             38          stz LEN0
+                        39  ;wait for usb packet
+7F19 A573               40  waitpacket lda $73
+7F1B 2904               41          and #$4
+7F1D F0FA               42          beq waitpacket
+                        43  
+                        44  ;fetch command
+7F1F AD0002             45          lda $200
+7F22 C900               46          cmp #$0
+7F24 F047               47          beq copy2fb
+7F26 C901               48          cmp #$1
+7F28 F01A               49          beq setaddr
+7F2A C902               50          cmp #$2
+7F2C F006               51          beq blon
+7F2E C903               52          cmp #$3
+7F30 F00A               53          beq bloff
+7F32 804B               54          bra packetend
+                        55  
+7F34 A503               56  blon    lda $03
+>>>> 57 WARNING: External parenthesis ignored
+
+
+Crasm LYB 1.3:                                                   page  2
+
+7F36 29FB               57          and #($ff-$04)
+7F38 8503               58          sta $03
+7F3A 8043               59          bra packetend
+                        60  
+7F3C A503               61  bloff   lda $03
+7F3E 0904               62          ora #$04
+7F40 8503               63          sta $03
+7F42 803B               64          bra packetend
+                        65  
+                        66  
+                        67  IF CTRTYPE=1 ;UC1697V
+                         C  ;set visible window
+                         C  setaddr lda #$F6 ;endx
+                         C          sta $8000
+                         C          lda $202
+                         C          sta $8000
+                         C  
+                         C          lda #$F7 ;endy
+                         C          sta $8000
+                         C          lda $204
+                         C          sta $8000
+                         C  
+                         C          lda #$F4 ;startx
+                         C          sta $8000
+                         C          lda $201
+                         C          sta $8000
+                         C  
+                         C          lda #$F5 ;starty
+                         C          sta $8000
+                         C          lda $203
+                         C          sta $8000
+                         C  
+                         C  ;reset addr to (0,0)
+                         C  ;       lda #$00
+                         C  ;       sta $8000
+                         C  ;       lda #$10
+                         C  ;       sta $8000
+                         C  ;       lda #$60
+                         C  ;       sta $8000
+                         C  ;       lda #$70
+                         C  ;       sta $8000
+                         C  
+                         C          bra packetend
+                       100  ENDC
+                       101  IF CTRTYPE=0 ;PCF8833
+                       102  ;set addr
+7F44 A92A              103  setaddr lda #$2A
+7F46 8D0080            104          sta $8000
+7F49 AD0102            105          lda $201
+7F4C 8D00C0            106          sta $c000
+7F4F AD0202            107          lda $202
+7F52 8D00C0            108          sta $c000
+                       109  
+7F55 A92B              110          lda #$2B
+7F57 8D0080            111          sta $8000
+7F5A AD0302            112          lda $203
+7F5D 8D00C0            113          sta $c000
+7F60 AD0402            114          lda $204
+7F63 8D00C0            115          sta $c000
+                       116  
+7F66 A92C              117          lda #$2c
+7F68 8D0080            118          sta $8000
+
+
+Crasm LYB 1.3:                                                   page  3
+
+                       119  
+7F6B 8012              120          bra packetend
+                       121  ENDC
+                       122  
+                       123  ;copy packet to framebuff. Len is in $201
+7F6D AD0102            124  copy2fb lda $201
+7F70 A8                125          tay
+7F71 A202              126          ldx #$2
+7F73 BD0002            127  copyloop lda $200,x
+7F76 8D00C0            128          sta $c000
+7F79 E8                129          inx
+7F7A 88                130          dey
+7F7B D0F6              131          bne copyloop
+7F7D 8000              132          bra packetend
+                       133  
+                       134  
+                       135  ;subtract 0x40 from 37A:37D.
+                       136  ;Damn, this is way easier on an ARM :P
+7F7F 38                137  packetend sec
+7F80 AD6E03            138          lda LEN0
+7F83 E940              139          sbc #$40
+7F85 8D6E03            140          sta LEN0
+7F88 AD6F03            141          lda LEN1
+7F8B E900              142          sbc #$0
+7F8D 8D6F03            143          sta LEN1
+7F90 AD7003            144          lda LEN2
+7F93 E900              145          sbc #$0
+7F95 8D7003            146          sta LEN2
+7F98 AD7103            147          lda LEN3
+7F9B E900              148          sbc #$0
+7F9D 8D7103            149          sta LEN3
+                       150  
+                       151  ;ack
+7FA0 A904              152          lda #$04
+7FA2 8573              153          sta $73
+                       154  
+                       155  ;check for done-ness
+7FA4 AD7103            156          lda LEN3
+7FA7 0D7003            157          ora LEN2
+7FAA 0D6F03            158          ora LEN1
+7FAD 0D6E03            159          ora LEN0
+7FB0 F003              160          beq nowaitpacket
+7FB2 4C197F            161          jmp waitpacket
+                       162  
+                       163  ;restore registers
+7FB5 68                164  nowaitpacket    pla
+7FB6 8535              165          sta $35
+                       166  
+                       167  
+                       168  ;send ack
+7FB8 A900              169          lda #$00
+7FBA 20B772            170          jsr SEND_CSW+0x4000
+                       171  
+                       172  ;and return as a winner :)
+7FBD A9FF              173          lda #$ff
+7FBF A2FF              174          ldx #$ff
+7FC1 4CF373            175          jmp PATCH_AT+$4004
+                       176  
+                       177  
+7FC4 4834434B          178          db "H","4","C","K"
+7FC8 01                179          db 1 ;version of info block
+7FC9 80                180          db CONF_XRES
+
+
+Crasm LYB 1.3:                                                   page  4
+
+7FCA 80                181          db CONF_YRES
+7FCB 0C                182          db CONF_BPP
+7FCC 00                183          db CONF_PROTO
+7FCD 04                184          db OFFX
+7FCE 04                185          db OFFY
+                       186  
+
+ERRORS:       0
+WARNINGS:     0
+
+Successful assembly...
+ Last address     7fce (32718)
+ Code length       1b6 (438)
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+Crasm LYB 1.3:                                                   page  5
+
+^7F3C   Abs BLOFF                                            
+^7F34   Abs BLON                                             
+ 037C   Abs CMP_VAR1                                         
+ 037D   Abs CMP_VAR2                                         
+ 000C   Abs CONF_BPP                                         
+ 0000   Abs CONF_PROTO                                       
+ 0080   Abs CONF_XRES                                        
+ 0080   Abs CONF_YRES                                        
+^7F6D   Abs COPY2FB                                          
+ 7F73   Abs COPYLOOP                                         
+ 0000   Abs CTRTYPE                                          
+ 3EF4   Abs EMPTY_AT                                         
+^7F0B   Abs GOTCHA                                           
+ 036E   Abs LEN0                                             
+ 036F   Abs LEN1                                             
+ 0370   Abs LEN2                                             
+ 0371   Abs LEN3                                             
+^7F04   Abs NOMAGIC                                          
+^7FB5   Abs NOWAITPACKET                                     
+ 0004   Abs OFFX                                             
+ 0004   Abs OFFY                                             
+^7F7F   Abs PACKETEND                                        
+ 33EF   Abs PATCH_AT                                         
+ 32B7   Abs SEND_CSW                                         
+^7F44   Abs SETADDR                                          
+?7EF4   Abs START                                            
+ 7F19   Abs WAITPACKET                                       
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+

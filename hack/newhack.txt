@@ -101,15 +101,14 @@ STA	X8000
 (Snip! one aditional store to 8000)
   you've got a UC1697V on your hands and CTRTYPE should be 1.
 - Fill out CONF_XRES, CONF_YRES with the horizontal and vertical resolution of
-  your device. Fill out CONF_BPP with the bits per pixel of the device 
-  (experiment, only 16bpp and 12bpp are supported for now and your device probably
-  is one of the two.)
+  your device.
   Leave CONF_PROTO at 0, which is the PCF8833-protocol.
 - If you're sure it'll work, you can try the hackfw.sh script for real.
-- Rejoice if you see the 'It Works!' image :)
-- If the image seems off-set to one side of the screen, try to fiddle with the 
-  OFFX and OFFY-settings to get a good image: add one to OFFX if the screen is
-  one pixel off to the left and one to OFFY if the screen is off one pixel to 
-  the top.
+- Rejoice if you see the 'It Works!' image :) 
+- If you see a garbled mess or if the image is offset, your OFFX, OFFY or 
+  CONF_BPP-settings are wrong. Go to the setpic-dir and run
+./setpic /dev/sdX -test test.png
+  and fiddle with the keys. As soon as your image is correct, you can copy
+  the displayed settings to the spec-file.
 - Zip up the m_yourmachine directory and mail it to 
   me <picframe@spritesmods.com>, if you like.

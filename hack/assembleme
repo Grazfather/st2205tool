@@ -1,4 +1,4 @@
-#!/bin/bash -x
+#!/bin/bash
 
 #Needed: 
 # - crasm. Is in debian repositories.
@@ -6,9 +6,14 @@
 # - objcopy. Prolly comes with your c compiler.
 
 function do_assemble() {
+    echo "Assembling  $1 into $2..."
     rm -f tmp.hex
-    crasm -o tmp.hex $1
-    if [ ! -e tmp.hex ]; then exit 1; fi
+    lst=`echo "$2" | sed 's/\..*/.lst/'`
+    crasm -o tmp.hex $1 > $lst
+    if [ ! -e tmp.hex ]; then 
+	echo "Error assembling $2. Please check $lst for more info."
+	exit 1;
+    fi
     objcopy -I ihex -O binary tmp.hex $2
     rm -f tmp.hex
 }
@@ -18,7 +23,6 @@ for x in m_*; do
     echo "Assembling $x..."
     cp $x/spec .
     
-    do_assemble parseusb.asm $x/parseusb.bin
     do_assemble hack.asm $x/hack.bin
     do_assemble hack_jmp.asm $x/hack_jmp.bin
     do_assemble lookforme.asm $x/lookforme.bin
@@ -26,3 +30,4 @@ for x in m_*; do
     rm spec
     echo "$x assembled."
 done
+echo "All done."

@@ -66,37 +66,34 @@ bloff	lda $03
 
 IF CTRTYPE=1 ;UC1697V
 ;set visible window
-setaddr	lda #$F4
-	sta $8000
-	lda $201
-	sta $8000
-
-	lda #$F5
-	sta $8000
-	lda $203
-	sta $8000
-
-	lda #$F6
+setaddr	lda #$F6 ;endx
 	sta $8000
 	lda $202
 	sta $8000
 
-	lda #$F7
+	lda #$F7 ;endy
 	sta $8000
 	lda $204
 	sta $8000
 
+	lda #$F4 ;startx
+	sta $8000
+	lda $201
+	sta $8000
+
+	lda #$F5 ;starty
+	sta $8000
+	lda $203
+	sta $8000
+
 ;reset addr to (0,0)
-	lda #$00
-	sta $8000
-	lda #$10
-	sta $8000
-	lda #$60
-	sta $8000
-	lda #$70
-	sta $8000
-	
-;	lda #$AF
+;	lda #$00
+;	sta $8000
+;	lda #$10
+;	sta $8000
+;	lda #$60
+;	sta $8000
+;	lda #$70
 ;	sta $8000
 
 	bra packetend

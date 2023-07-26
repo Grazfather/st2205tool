@@ -55,8 +55,8 @@ typedef struct {
     unsigned char height;
     char bpp;
     char proto;
-    char xoff;
-    char yoff;
+    char offx;
+    char offy;
 } fw_descriptor;
 
 /*
@@ -199,8 +199,8 @@ static int adddata(char *buff, int p, char d) {
 
 #define PROTO_PCF8833 0
 
-static int getpixel(st2205_handle *h, char *pix, int x, int y) {
-    int r,a;
+static unsigned int getpixel(st2205_handle *h, unsigned char *pix, int x, int y) {
+    unsigned int r,a;
     if (x<0 || y<0 || x>=h->width || y>=h->height) return 0;
     a=(x+h->width*y)*3;
     r=pix[a]+(pix[a+1]<<8)+(pix[a+2]<<16);
@@ -218,10 +218,10 @@ static int write_stream(st2205_handle *h,char *buff,int len) {
 }
 
 
-//Sens image (xs,ys)-(xe,ye), inclusive.
-static void pcf8833_send_partial(st2205_handle *h,char *pixinfo,int xs, int ys, int xe, int ye) {
+//Sends image (xs,ys)-(xe,ye), inclusive.
+static void pcf8833_send_partial(st2205_handle *h,unsigned char *pixinfo,int xs, int ys, int xe, int ye) {
     int p,x,y,z;
-    int r,g,b,c;
+    unsigned int r,g,b,c;
     long tr;
     //if bpp=12, make width and xstart even
     if (h->bpp==12) {
@@ -263,7 +263,8 @@ static void pcf8833_send_partial(st2205_handle *h,char *pixinfo,int xs, int ys, 
 
 
 //pixinfo is a char array containing r,g,b triplets.
-void st2205_send_data(st2205_handle *h,char *pixinfo) {
+void st2205_send_data(st2205_handle *h,unsigned char *pixinfo) {
+//    printf("libst2205: sending, ox=%i, oy=%i, bpp=%i\n",h->offx,h->offy,h->bpp);
     int x,y,xs,xe,ys,ye,c1,c2;
     if (h->proto==PROTO_PCF8833) {
 	//PCF8833 has the possibility to do partial transfers into a certain bounding
