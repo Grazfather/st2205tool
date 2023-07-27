@@ -1,0 +1,10 @@
+*.a
+*.dylib
+phack
+bgrep
+splice
+setpic/setpic
+fwimage.bin
+fwimage.bak
+fwimage.bak.old
+memimage.bak
