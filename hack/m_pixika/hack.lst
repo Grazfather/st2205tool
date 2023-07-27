@@ -1,31 +1,31 @@
-Crasm LYB 1.3:                                                   page  1
+Crasm 1.11:                                                   page  1
 
                          1  ;    Routines to allow direct USB-to-LCD-transfe
-rs in an ST220x-device
+     rs in an ST220x-device
                          2  ;    Copyright (C) 2008 Jeroen Domburg <jeroen@s
-pritesmods.com>
+     pritesmods.com>
                          3  ;
                          4  ;    This program is free software: you can redi
-stribute it and/or modify
+     stribute it and/or modify
                          5  ;    it under the terms of the GNU General Publi
-c License as published by
+     c License as published by
                          6  ;    the Free Software Foundation, either versio
-n 3 of the License, or
+     n 3 of the License, or
                          7  ;    (at your option) any later version.
                          8  ;
                          9  ;    This program is distributed in the hope tha
-t it will be useful,
+     t it will be useful,
                         10  ;    but WITHOUT ANY WARRANTY; without even the 
-implied warranty of
+     implied warranty of
                         11  ;    MERCHANTABILITY or FITNESS FOR A PARTICULAR
-PURPOSE.  See the
+     PURPOSE.  See the
                         12  ;    GNU General Public License for more details
-.
+     .
                         13  ;
                         14  ;    You should have received a copy of the GNU 
-General Public License
+     General Public License
                         15  ;    along with this program.  If not, see <http
-://www.gnu.org/licenses/>.
+     ://www.gnu.org/licenses/>.
                         16  
                         17  
                         18      CPU 65c02
@@ -34,14 +34,14 @@ General Public License
   79B0                  21      * = EMPTY_AT+$4000
                         22  
                         23  ;The routine in the existing firmware is patched
-to jump here if the
+ to jump here if the
                         24  ;routine that discerns the address that's writte
-n to fails.
+ n to fails.
                         25  ;This way, we can splice our own check inthere t
-oo.
+ oo.
                         26  
                         27  ;Watch out & be carefull with bloating this: one
-of the devices (the Coby)
+ of the devices (the Coby)
                         28  ;only has 230 bytes free to cram this in!
                         29  
                         30  ;check magic write to address 4400
@@ -53,7 +53,7 @@ of the devices (the Coby)
 79BC D002               36          bne nomagic
 79BE 8007               37          bra gotcha
                         38  ;Nope? Do what the original routine did & bail o
-ut.
+ ut.
 79C0 A9FF               39  nomagic lda #$ff
 79C2 A2FF               40          ldx #$ff
 79C4 4CB06E             41          jmp PATCH_AT+$4004
@@ -64,7 +64,7 @@ ut.
                         46  
 
 
-Crasm LYB 1.3:                                                   page  2
+Crasm 1.11:                                                   page  2
 
                         47  ;Push registers 
 79CB A535               48          lda $35
@@ -130,7 +130,7 @@ Crasm LYB 1.3:                                                   page  2
                          C          lda $203
 
 
-Crasm LYB 1.3:                                                   page  3
+Crasm 1.11:                                                   page  3
 
                          C          sta $8000
                          C  
@@ -187,7 +187,7 @@ Crasm LYB 1.3:                                                   page  3
 7A39 AD0102            160          lda $201
                        161  ;       dea ;dma sends this +1 over; compensate
                        162          ;^^ stupid crasm doesn't recognize this 
-:X
+         :X
 7A3C 3A                163          db $3a ;=hardcoded 'dea'
 7A3D 855C              164          sta $5C
                        165  
@@ -196,7 +196,7 @@ Crasm LYB 1.3:                                                   page  3
                        168  ;Damn, this is way easier on an ARM :P
 
 
-Crasm LYB 1.3:                                                   page  4
+Crasm 1.11:                                                   page  4
 
 7A3F 38                169  packetend sec
 7A40 ADA503            170          lda LEN0
@@ -262,7 +262,7 @@ Successful assembly...
 
 
 
-Crasm LYB 1.3:                                                   page  5
+Crasm 1.11:                                                   page  5
 
 ^79F8   Abs BLOFF                                            
 ^79F0   Abs BLON                                             
