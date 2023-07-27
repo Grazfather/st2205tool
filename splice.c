@@ -30,47 +30,47 @@ int main(int argc, char **argv) {
     unsigned int offset;
     char *buff;
     struct stat sbuff;
-    
+
     if (argc!=4) {
-	printf("Usage: %s file1 file2 offset\nOverwrites the byte in file1 with those of file2, starting at offset.\n", argv[0]);
-	exit(0);
+        printf("Usage: %s file1 file2 offset\nOverwrites the byte in file1 with those of file2, starting at offset.\n", argv[0]);
+        exit(0);
     }
-    
+
     r=stat(argv[1],&sbuff);
     if (r!=0) {
-	perror("Couldn't stat file1.\n");
-	exit(1);
+        perror("Couldn't stat file1.\n");
+        exit(1);
     }
     size=sbuff.st_size;
     buff=malloc(size);
     if (buff==NULL) {
-	perror("Couldn't malloc bytes for file1.\n");
+        perror("Couldn't malloc bytes for file1.\n");
     }
     f1=open(argv[1],O_RDONLY);
     if (f1<0) {
-	perror("Couldn't open file1.\n");
-	exit(1);
+        perror("Couldn't open file1.\n");
+        exit(1);
     }
     read(f1,buff,size);
     close(f1);
-    
+
     offset= strtol(argv[3], (char **)NULL, 0);
     if (offset>size) {
-	printf("Offset bigger than size of file!\n");
-	exit(1);
+        printf("Offset bigger than size of file!\n");
+        exit(1);
     }
     printf("Splicing in at offset 0x%X.\n",offset);
     f2=open(argv[2],O_RDONLY);
     if (f2<0) {
-	perror("Couldn't open file2.\n");
-	exit(1);
+        perror("Couldn't open file2.\n");
+        exit(1);
     }
     read(f2,buff+offset,size);
     close(f2);
     f1=open(argv[1],O_CREAT|O_TRUNC|O_WRONLY);
     if (f1<0) {
-	perror("Couldn't open file1 for writing.\n");
-	exit(1);
+        perror("Couldn't open file1 for writing.\n");
+        exit(1);
     }
     write(f1,buff,size);
     close(f1);

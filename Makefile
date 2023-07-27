@@ -1,14 +1,14 @@
 SRC	=	main.c
 OBJ	=	main.o
 FLAGS	=	-g
-LIBS	=	
+LIBS	=
 
 all:	libst2205/libst2205.so setpic/setpic phack splice bgrep
 
 install: all
 	make -C libst2205 install
 
-libst2205/libst2205.so: 
+libst2205/libst2205.so:
 	make -C libst2205
 
 setpic/setpic:
@@ -23,7 +23,7 @@ splice:	splice.o splice.c
 bgrep:	bgrep.o bgrep.c
 	gcc -o bgrep bgrep.o
 
-clean:	
+clean:
 	make -C libst2205 clean
 	make -C setpic clean
 	rm -f $(OBJ) phack splice splice.o bgrep bgrep.o

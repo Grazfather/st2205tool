@@ -43,16 +43,16 @@ static void *malloc_aligned(long size)
 	void *buff;
 
 	f = open("/dev/zero", O_RDONLY);
-	
+
 	if (f < 0) {
 		perror("Can't open /dev/zero:");
 		return NULL;
 	}
 
 	buff = mmap(0, size, PROT_READ | PROT_WRITE, MAP_PRIVATE, f, 0);
-	
+
 	close(f);
-	
+
 	return buff;
 }
 
@@ -85,9 +85,9 @@ static int is_photoframe(int f)
 	int res;
 	char id[] = "SITRONIX CORP.";
 	char *buff;
-	
+
 	buff = malloc_aligned(0x200);
-	
+
 	if (buff == NULL) {
 		fprintf(stderr, "aligned_malloc failed :(\n");
 		return 0;
@@ -101,7 +101,7 @@ static int is_photoframe(int f)
 	res = strncmp(buff, id, 15);
 
 	free_aligned(buff, 0x200);
-	
+
 	return !res;
 }
 
@@ -121,7 +121,7 @@ static int sendcmd(int fd, int cmd, unsigned int arg1, unsigned int arg2, unsign
 	unsigned char *buff;
 
 	buff = malloc_aligned(0x200);
-	
+
 	if (buff == NULL) {
 		fprintf(stderr, "malloc_aligned failed :(\n");
 		return -1;
@@ -137,11 +137,11 @@ static int sendcmd(int fd, int cmd, unsigned int arg1, unsigned int arg2, unsign
 	buff[7] = (arg2>>0x08)&0xff;
 	buff[8] = (arg2>>0x00)&0xff;
 	buff[9] = (arg3);
-	
+
 	if (lseek(fd, POS_CMD, SEEK_SET) < 0) {
 		return -1;
 	}
-	
+
 	return write(fd, buff, 0x200);
 }
 
@@ -169,7 +169,7 @@ static void dumpmem(unsigned char* mem, int len)
 	for (x=0; x<len; x+=16) {
 
 		printf("%04x: ", x);
-		
+
 		for (y=0; y<16; y++) {
 			if ((x+y) > len) {
 				printf("   ");
@@ -177,7 +177,7 @@ static void dumpmem(unsigned char* mem, int len)
 				printf("%02hhx ", mem[x+y]);
 			}
 		}
-		
+
 		printf("- ");
 
 		for (y=0; y<16; y++) {
@@ -199,7 +199,7 @@ static fw_descriptor *get_parm_block(int fd, char* buff)
 {
 	int a, p;
 	char lookfor[] = "H4CK\000";
-	
+
 	/*
 	 Read 64K of firmware into buff
 	 */
@@ -207,7 +207,7 @@ static fw_descriptor *get_parm_block(int fd, char* buff)
 	read_data(fd, buff, 0x8000);
 	sendcmd(fd, 4, FW_PAGE_OFFSET+1, 0x8000, 0);
 	read_data(fd, buff+0x8000, 0x8000);
-	
+
 	/*
 	 Look for 'H4CK' string
 	 */
@@ -226,13 +226,13 @@ static fw_descriptor *get_parm_block(int fd, char* buff)
 static int enddata(char *buff, int p)
 {
 	int pageaddr, offset;
-	
+
 	offset = p & 63;
 	pageaddr = p-offset;
-	
+
 	if (offset == 0)
 		return 0;
-	
+
 	buff[pageaddr + 1] = offset - 1;
 	p = pageaddr + 64;
 
@@ -259,7 +259,7 @@ static int adddata(char *buff, int p, char d)
 	}
 
 	buff[p] = d;
-	
+
 	if ((p&63) == 63)
 		p = enddata(buff, p);
 	else
@@ -281,7 +281,7 @@ static unsigned int getpixel(st2205_handle *h, unsigned char *pix, unsigned int 
 	r = pix[a]+(pix[a+1]<<8)+(pix[a+2]<<16);
 
 	return r;
-} 
+}
 
 static int write_stream(st2205_handle *h, char *buff, int len)
 {
@@ -293,7 +293,7 @@ static int write_stream(st2205_handle *h, char *buff, int len)
 	}
 
 	//DPRINT("Writing 0x%x bytes.\n",len);
-	
+
 	if (lseek(h->fd, 0x4400, SEEK_SET) < 0)
 		return -1;
 
@@ -308,7 +308,7 @@ static void pcf8833_send_partial(st2205_handle *h, unsigned char *pixinfo, int x
 	int p, x, y, z;
 	unsigned int r, g, b, c;
 	long tr;
-	
+
 	/*
 	 bpp=12, make width and xstart even
 	 */
@@ -375,7 +375,7 @@ static void pcf8833_send_partial(st2205_handle *h, unsigned char *pixinfo, int x
 void st2205_send_data(st2205_handle *h, unsigned char *pixinfo)
 {
 	unsigned int x,y,xs,xe,ys,ye,c1,c2;
-	
+
 	/*
 	 PCF8833 has the possibility to do partial transfers into a certain bounding
 	 box. Optimize for that by looking for the smallest bounding box containing
@@ -392,7 +392,7 @@ void st2205_send_data(st2205_handle *h, unsigned char *pixinfo)
 			 dividing the difference in multiple bounding boxes works better.
 			 */
 			xe = 0; ye = 0; xs = h->width; ys = h->height;
-			
+
 			for (x=0; x<h->width; x++) {
 				for (y=0; y<h->height; y++) {
 					c1 = getpixel(h, pixinfo, x, y);
@@ -402,7 +402,7 @@ void st2205_send_data(st2205_handle *h, unsigned char *pixinfo)
 							xs = x;
 						if (y < ys)
 							ys = y;
-						if (x > xe) 
+						if (x > xe)
 							xe = x;
 						if (y > ye)
 							ye = y;
@@ -422,7 +422,7 @@ void st2205_send_data(st2205_handle *h, unsigned char *pixinfo)
 	if (h->oldpix == NULL) {
 		h->oldpix = malloc(h->width*h->height*3);
 	}
-	
+
 	/*
 	 Not to fail if malloc haven't allocated memory.
 	 */
@@ -449,10 +449,10 @@ void st2205_close(st2205_handle *h)
 {
 	close(h->fd);
 	free_aligned(h->buff, BUFF_SIZE);
-	
+
 	if (h->oldpix != NULL)
 		free(h->oldpix);
-	
+
 	free(h);
 }
 
@@ -470,19 +470,19 @@ st2205_handle *st2205_open(const char *dev)
 		perror(dev);
 		return NULL;
 	}
-	
+
 	if (!is_photoframe(fd)) {
 		close(fd);
 		return NULL;
 	}
-	
-	buff = malloc_aligned(BUFF_SIZE);	
+
+	buff = malloc_aligned(BUFF_SIZE);
 	if (buff == NULL) {
 		close(fd);
 		free_aligned(buff, BUFF_SIZE);
 		return NULL;
 	}
-	
+
 	b = get_parm_block(fd, buff);
 	if (b==NULL) {
 		printf("Unable to get parm_block\n");
@@ -491,13 +491,13 @@ st2205_handle *st2205_open(const char *dev)
 		return(0);
 	}
 
-	r = malloc(sizeof(st2205_handle));	
+	r = malloc(sizeof(st2205_handle));
 	if (b->version != 1 || r == NULL) {
 		if (b->version != 1)
 			fprintf(stderr, "Unknown version %hhi\n", b->version);
 		close(fd);
 		free_aligned(buff, BUFF_SIZE);
-		return NULL;	
+		return NULL;
 	}
 
 	r->fd     = fd;
@@ -509,8 +509,8 @@ st2205_handle *st2205_open(const char *dev)
 	r->oldpix = NULL;
 	r->offx   = b->offx;
 	r->offy   = b->offy;
-	
+
 	DPRINT("libst2205: detected device, %ix%i, %i bpp.\n", r->width, r->height, r->bpp);
-	
+
 	return r;
 }

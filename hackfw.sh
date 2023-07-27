@@ -45,15 +45,15 @@ if [ -z "$2" ]; then
     echo "device to fwimage.bak and memimage.bak. Please save fwimage.bak, you"
     echo "need it to flash a newer version into your unit."
     if [ -e fwimage.bak ]; then
-	echo "Found existing fwimage.bak, moving to fwimage.bak.old";
-	mv fwimage.bak fwimage.bak.old
+        echo "Found existing fwimage.bak, moving to fwimage.bak.old";
+        mv fwimage.bak fwimage.bak.old
     fi
-    ./phack -df fwimage.bak $1  > /dev/null || exit 1 
+    ./phack -df fwimage.bak $1  > /dev/null || exit 1
     ./phack -d memimage.bak $1  > /dev/null || exit 1
 
     echo "Making a working copy..."
     cp fwimage.bak fwimage.bin
-else 
+else
     echo "Making a working copy..."
     cp $2 fwimage.bin || exit 1
 fi
@@ -66,11 +66,11 @@ for x in hack/m_*; do
     em=`cat $x/spec | grep '^EMPTY_AT' | cut -d '$' -f 2 | tr 'A-Z' 'a-z'`
     pa=`cat $x/spec | grep '^PATCH_AT' | cut -d '$' -f 2 | tr 'A-Z' 'a-z'`
     if ./bgrep fwimage.bin $x/lookforme.bin -h | grep -q $pa; then
-	if ./bgrep fwimage.bin hack/empty.bin -h | grep -q $em; then
-	    echo "We have a match!"
-	    match=true
-	    break;
-	fi
+        if ./bgrep fwimage.bin hack/empty.bin -h | grep -q $em; then
+            echo "We have a match!"
+            match=true
+            break;
+        fi
     fi
     echo "...nope."
 done

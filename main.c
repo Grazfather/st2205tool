@@ -175,7 +175,7 @@ int main(int argc, char** argv) {
 //	printf("directory to the LCD.\n");
 	exit(0);
     }
-    
+
     //check requested command
     if (strcmp(argv[1],"-u")==0) mode=M_UP;
     if (strcmp(argv[1],"-d")==0) mode=M_DMP;
@@ -186,7 +186,7 @@ int main(int argc, char** argv) {
 	printf("Invalid command: %s\n",argv[1]);
 	exit(1);
     }
-    
+
     //open the device
     if (argc>=4) {
 	f=open(argv[3],O_RDWR|O_DIRECT|O_SYNC);
@@ -201,7 +201,7 @@ int main(int argc, char** argv) {
     }
 
     //open file, if needed
-    if (mode==M_DMP || mode==M_FDMP) {    
+    if (mode==M_DMP || mode==M_FDMP) {
 	o=open(argv[2],O_WRONLY|O_TRUNC|O_CREAT,0644);
     } else if (mode==M_UP || mode==M_FUP) {
 	o=open(argv[2],O_RDONLY);
@@ -210,8 +210,8 @@ int main(int argc, char** argv) {
 	fprintf(stderr,"Error opening %s.\n",argv[2]);
 	exit(1);
     }
-    
-    //Allocate buffer and send a command. Check the result as an extra caution 
+
+    //Allocate buffer and send a command. Check the result as an extra caution
     //against non-photoframe devices.
     buff=malloc_aligned(0x10000);
     sendcmd(f,1,0,0,0);
