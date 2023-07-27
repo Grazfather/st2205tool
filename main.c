@@ -161,7 +161,7 @@ int main(int argc, char** argv) {
     unsigned char *buff;
 
     if (argc<2) {
-	printf("Usage:\n%s [-d|-u|-df|-uf|-m|-l] file [device]\n",argv[0]);
+	printf("Usage:\n%s [-d|-u|-df|-uf|-m] file [device]\n",argv[0]);
 	printf(" -d: dump mem\n");
 	printf(" -u: upload mem\n");
 	printf(" -df: dump firmware\n");

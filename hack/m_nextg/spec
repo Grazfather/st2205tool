@@ -1,18 +1,19 @@
-;Spec-file for Coby DP151.
+;Spec-file for NextG picture frame
 ;Please keep the way the adresses are entered ($ to indicate a hex number,
 ;adresses in 4 digits) intact or the hackfw.sh script won't work anymore.
 ;Adresses here refer to file-adresses; in runtime these are loaded $4000
 ;bytes higher but that's accounted for in the hack-code itself.
 
-CMP_VAR1=$037C
-CMP_VAR2=$037D
-PATCH_AT=$33ef
-EMPTY_AT=$3ef4
-SEND_CSW=$32B7
-LEN0=$36e
-LEN1=$36f
-LEN2=$370
-LEN3=$371
+CMP_VAR1=$037A
+CMP_VAR2=$037B
+PATCH_AT=$2BB0
+
+EMPTY_AT=$2D55
+SEND_CSW=$2a78
+LEN0=$36c
+LEN1=$36d
+LEN2=$36e
+LEN3=$36f
 CONF_XRES=128
 CONF_YRES=128
 CONF_BPP=24

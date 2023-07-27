@@ -69,14 +69,6 @@ ROL     D0370
 ROL     D0371
 - Fill LEN1 to LEN3 with the ASL/ROLled adresses, fill LEN0 with LEN1-1. In this
   example, LEN0=$36E, LEN1=$36F, LEN2=$370, LEN3=$371
-- Regenerate the binaries using the 'assembleme'-script. You'll need to have
-  crasm installed for this.
-- Try the hackfw script. If the script finds your device profile and asks if
-  you really want to flash the hacked firmware, !disconnect your device! and
-  enter 'yes'.
-- The hacked firmware now is in the 'fwimage.bin'-file. Please revise the
-  patched areas around PATCH_AT and EMPTY_AT: a mistake here could in theory
-  brick your device.
 - Check the kind of controller you have: if you find this in your disassembly
   code (mostly in segment 1), your controller most likely is an PCF8833 and you
   should leave your CTRTYPE at 0:
@@ -103,6 +95,14 @@ STA	X8000
 - Fill out CONF_XRES, CONF_YRES with the horizontal and vertical resolution of
   your device.
   Leave CONF_PROTO at 0, which is the PCF8833-protocol.
+- Regenerate the binaries using the 'assembleme'-script. You'll need to have
+  crasm installed for this.
+- Try the hackfw script. If the script finds your device profile and asks if
+  you really want to flash the hacked firmware, !disconnect your device! and
+  enter 'yes'.
+- The hacked firmware now is in the 'fwimage.bin'-file. Please revise the
+  patched areas around PATCH_AT and EMPTY_AT: a mistake here could in theory
+  brick your device.
 - If you're sure it'll work, you can try the hackfw.sh script for real.
 - Rejoice if you see the 'It Works!' image :) 
 - If you see a garbled mess or if the image is offset, your OFFX, OFFY or 

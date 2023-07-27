@@ -1,3 +1,20 @@
+;    Routines to allow direct USB-to-LCD-transfers in an ST220x-device
+;    Copyright (C) 2008 Jeroen Domburg <jeroen@spritesmods.com>
+;
+;    This program is free software: you can redistribute it and/or modify
+;    it under the terms of the GNU General Public License as published by
+;    the Free Software Foundation, either version 3 of the License, or
+;    (at your option) any later version.
+;
+;    This program is distributed in the hope that it will be useful,
+;    but WITHOUT ANY WARRANTY; without even the implied warranty of
+;    MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+;    GNU General Public License for more details.
+;
+;    You should have received a copy of the GNU General Public License
+;    along with this program.  If not, see <http://www.gnu.org/licenses/>.
+
+
     CPU 65c02
     OUTPUT HEX
     INCLUDE spec
@@ -53,19 +70,23 @@ waitpacket lda $73
 	beq bloff
 	bra packetend
 
+;Command 2: turn backlight on
 blon	lda $03
 	and #($ff-$04)
 	sta $03
 	bra packetend
 
+;Command 3: turn backlight off
 bloff	lda $03
 	ora #$04
 	sta $03
 	bra packetend
 
 
+;Command 1: set window to write data to
 IF CTRTYPE=1 ;UC1697V
 ;set visible window
+;Non-working as of yet :/
 setaddr	lda #$F6 ;endx
 	sta $8000
 	lda $202
@@ -98,7 +119,7 @@ setaddr	lda #$F6 ;endx
 
 	bra packetend
 ENDC
-IF CTRTYPE=0 ;PCF8833
+IF CTRTYPE==0 ;PCF8833
 ;set addr
 setaddr	lda #$2A
 	sta $8000
@@ -120,16 +141,27 @@ setaddr	lda #$2A
 	bra packetend
 ENDC
 
-;copy packet to framebuff. Len is in $201
-copy2fb	lda $201
-	tay
-	ldx #$2
-copyloop lda $200,x
-	sta $c000
-	inx
-	dey
-	bne copyloop
-	bra packetend
+
+;Command 0: dma data to lcd.
+	;set dma regs
+	;copy from ($202)
+copy2fb	lda #$2
+	sta $58
+	sta $59
+	;from bank (=0)
+	stz $5e
+	stz $5f
+	;to (0xc0xx)
+	lda #$C0
+	sta $5b
+;	stz $5a ;unnecessary
+	;count
+	stz $5D
+	lda $201
+;	dea ;dma sends this +1 over; compensate
+	;^^ stupid crasm doesn't recognize this :X
+	db $3a ;=hardcoded 'dea'
+	sta $5C
 
 
 ;subtract 0x40 from 37A:37D.
@@ -144,17 +176,18 @@ packetend sec
 	lda LEN2
 	sbc #$0
 	sta LEN2
-	lda LEN3
-	sbc #$0
-	sta LEN3
+;never gonna do such large xfers anyway
+;	lda LEN3
+;	sbc #$0
+;	sta LEN3
 
 ;ack
 	lda #$04
 	sta $73
 
 ;check for done-ness
-	lda LEN3
-	ora LEN2
+;	lda LEN3
+	lda LEN2
 	ora LEN1
 	ora LEN0
 	beq nowaitpacket

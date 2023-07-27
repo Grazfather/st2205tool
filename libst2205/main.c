@@ -239,6 +239,12 @@ static void pcf8833_send_partial(st2205_handle *h,unsigned char *pixinfo,int xs,
 		c=(r<<11)+(g<<5)+b;
 		p=adddata(h->buff,p,(c>>8));
 		p=adddata(h->buff,p,(c&255));
+	    } else if (h->bpp==24) {
+		c=getpixel(h,pixinfo,x,y);
+		r=(c&0xff); g=(c>>8)&0xff; b=(c>>16)&0xff;
+		p=adddata(h->buff,p,r);
+		p=adddata(h->buff,p,g);
+		p=adddata(h->buff,p,b);
 	    } else if (h->bpp==12) {
 		tr=0;
 		for (z=0; z<2; z++) {
@@ -247,6 +253,10 @@ static void pcf8833_send_partial(st2205_handle *h,unsigned char *pixinfo,int xs,
 		    r>>=4;g>>=4;b>>=4;
 		    tr=(tr<<12)+(r<<8)+(g<<4)+(b);
 		}
+//		p=adddata(h->buff,p,0xff);
+//		p=adddata(h->buff,p,0xff);
+//		p=adddata(h->buff,p,0xff);
+
 		p=adddata(h->buff,p,(tr>>16)&0xff);
 		p=adddata(h->buff,p,(tr>>8)&0xff);
 		p=adddata(h->buff,p,(tr)&0xff);
@@ -351,5 +361,6 @@ st2205_handle *st2205_open(char *dev) {
     r->oldpix=NULL;
     r->offx=b->offx;
     r->offy=b->offy;
+    fprintf(stderr,"libst2205: detected device, %ix%i, %i bpp.",r->width,r->height,r->bpp);
     return r;
 }

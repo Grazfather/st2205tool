@@ -1,3 +1,5 @@
+All patches need libst205 to be installed before compiling.
+
 ** mplayer-1.0rc2-libst2205.patch **
 This is a patch against MPlayer v1.0rc2 to add support for a hacked ST2205
 device as a video output device.
@@ -13,5 +15,5 @@ Ultra-short howto:
 
 
 ** lcd4linux-svn-st2205.patch **
-This is a patch against the current (20 jan '08) SVN version of LCD4Linux,
-which 
+This is a patch against the current (20 jan '08) SVN version of LCD4Linux. 
+Apply, compile, see the example for configuration.

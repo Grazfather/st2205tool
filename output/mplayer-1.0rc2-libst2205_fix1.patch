@@ -60,7 +60,7 @@ diff -BNburp MPlayer-1.0rc2-org/libvo/video_out.c MPlayer-1.0rc2/libvo/video_out
  #endif
 diff -BNburp MPlayer-1.0rc2-org/libvo/vo_st2205u.c MPlayer-1.0rc2/libvo/vo_st2205u.c
 --- MPlayer-1.0rc2-org/libvo/vo_st2205u.c	1970-01-01 01:00:00.000000000 +0100
-+++ MPlayer-1.0rc2/libvo/vo_st2205u.c	2008-01-20 15:32:26.000000000 +0100
++++ MPlayer-1.0rc2/libvo/vo_st2205u.c	2008-01-24 21:38:25.000000000 +0100
 @@ -0,0 +1,158 @@
 +/*
 + * Video driver for ST2205U
@@ -180,8 +180,8 @@ diff -BNburp MPlayer-1.0rc2-org/libvo/vo_st2205u.c MPlayer-1.0rc2/libvo/vo_st220
 +	//make sure we won't cross the boundaries of dest
 +	if (x>127) return 0;
 +	if (y>127) return 0;
-+	if (w+x>=st_h->width) w=st_h->width-x-1;
-+	if (h+x>=st_h->height) h=st_h->height-x-1;
++	if (w+x>st_h->width) w=st_h->width-x;
++	if (h+x>st_h->height) h=st_h->height-x;
 +
 +	for (i = 0; i < h; i++) {
 +		//manually do a memcpy because the bytes

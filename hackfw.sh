@@ -1,9 +1,29 @@
 #!/bin/bash
+
+#    ST2205U: interactively patch firmware
+#    Copyright (C) 2008 Jeroen Domburg <jeroen@spritesmods.com>
+#
+#    This program is free software: you can redistribute it and/or modify
+#    it under the terms of the GNU General Public License as published by
+#    the Free Software Foundation, either version 3 of the License, or
+#    (at your option) any later version.
+#
+#    This program is distributed in the hope that it will be useful,
+#    but WITHOUT ANY WARRANTY; without even the implied warranty of
+#    MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+#    GNU General Public License for more details.
+#
+#    You should have received a copy of the GNU General Public License
+#    along with this program.  If not, see <http://www.gnu.org/licenses/>.
+
+
 echo "Interactive script to hack the firmware of your keychain photo"
 echo "player."
 if [ ! -e "$1" ]; then
-    echo "Usage: $0 /dev/sdX"
+    echo "Usage: $0 /dev/sdX [oldfirmware.bin]"
     echo "where /dev/sdX is the path to the device your photo-unit is connected to."
+    echo "Optional: give a backup of the original firmware to skip reading out the"
+    echo "current firmware image."
     echo "Make sure the device is in upload-mode!"
     exit 0;
 fi
@@ -19,19 +39,25 @@ if ! ./phack -m "baks r ok" $1; then
     exit 1;
 fi
 
-echo
-echo "Ok, first off all, we're going to backup the firmware and memory of your"
-echo "device to fwimage.bak and memimage.bak. Please save fwimage.bak, you"
-echo "need it to flash a newer version into your unit."
-if [ -e fwimage.bak ]; then
-    echo "Found existing fwimage.bak, moving to fwimage.bak.old";
-    mv fwimage.bak fwimage.bak.old
-fi
-./phack -df fwimage.bak $1  > /dev/null || exit 1 
-./phack -d memimage.bak $1  > /dev/null || exit 1
+if [ -z "$1" ]; then
+    echo
+    echo "Ok, first off all, we're going to backup the firmware and memory of your"
+    echo "device to fwimage.bak and memimage.bak. Please save fwimage.bak, you"
+    echo "need it to flash a newer version into your unit."
+    if [ -e fwimage.bak ]; then
+	echo "Found existing fwimage.bak, moving to fwimage.bak.old";
+	mv fwimage.bak fwimage.bak.old
+    fi
+    ./phack -df fwimage.bak $1  > /dev/null || exit 1 
+    ./phack -d memimage.bak $1  > /dev/null || exit 1
 
-echo "Making a working copy..."
-cp fwimage.bak fwimage.bin
+    echo "Making a working copy..."
+    cp fwimage.bak fwimage.bin
+else 
+    echo "Making a working copy..."
+    cp $2 fwimage.bin || exit 1
+fi
+
 
 match=false;
 echo "Looking for a known device profile..."

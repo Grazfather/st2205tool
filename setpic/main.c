@@ -103,8 +103,8 @@ void sendthis(st2205_handle *h, char* what) {
 }
 
 
-//This is a debugging routine. Don't EVER mess with the internals of the handle
-//like this in a real program!
+//This is a debugging routine. Don't EVER mess with the internals of the
+//st2205_handle like this in a real program!
 void testpic(st2205_handle *h, char* what) {
     char c;
     struct termios term;
@@ -155,8 +155,11 @@ int main(int argc, char **argv) {
     if (argc<2) {
 	printf("Usage:\n");
 	printf(" %s /dev/sdX [-upload] pic.png\n",argv[0]);
+	printf("  sends a picture to the screen\n");
 	printf(" %s /dev/sdX -backlight on|off\n",argv[0]);
+	printf("  for backlight control\n");
 	printf(" %s /dev/sdX -test pic.png\n",argv[0]);
+	printf("  Test-mode: interactively find out values for the spec-file\n");
 	exit(0);
     }
 

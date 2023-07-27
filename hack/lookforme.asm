@@ -8,4 +8,4 @@
     LDX #$FF
     STA CMP_VAR1
     STX CMP_VAR2
-
+    RTS

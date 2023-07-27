@@ -10,15 +10,15 @@ Crasm LYB 1.3:                                                   page  1
 73F1 A2FF                8      LDX #$FF
 73F3 8D7C03              9      STA CMP_VAR1
 73F6 8E7D03             10      STX CMP_VAR2
-                        11  
+73F9 60                 11      RTS
                         12  
 
 ERRORS:       0
 WARNINGS:     0
 
 Successful assembly...
- Last address     73f8 (29688)
- Code length        14 (20)
+ Last address     73f9 (29689)
+ Code length        16 (22)
 
 
 
@@ -68,7 +68,7 @@ Crasm LYB 1.3:                                                   page  2
 
  037C   Abs CMP_VAR1                                         
  037D   Abs CMP_VAR2                                         
-?000C   Abs CONF_BPP                                         
+?0018   Abs CONF_BPP                                         
 ?0000   Abs CONF_PROTO                                       
 ?0080   Abs CONF_XRES                                        
 ?0080   Abs CONF_YRES                                        
