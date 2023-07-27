@@ -1,0 +1,132 @@
+Crasm 1.11:                                                   page  1
+
+                         1      CPU 65c02
+                         2      OUTPUT HEX
+                         3      INCLUDE spec
+  7101                   4      * = PATCH_AT+$4000
+                         5  
+                         6  ;Look for this bit to patch.
+7101 A9FF                7      LDA #$FF
+7103 A2FF                8      LDX #$FF
+7105 8D8803              9      STA CMP_VAR1
+7108 8E8903             10      STX CMP_VAR2
+710B 60                 11      RTS
+                        12  
+
+ERRORS:       0
+WARNINGS:     0
+
+Successful assembly...
+ Last address     710b (28939)
+ Code length        16 (22)
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+Crasm 1.11:                                                   page  2
+
+ 0388   Abs CMP_VAR1                                         
+ 0389   Abs CMP_VAR2                                         
+?0018   Abs CONF_BPP                                         
+?0000   Abs CONF_PROTO                                       
+?0080   Abs CONF_XRES                                        
+?0080   Abs CONF_YRES                                        
+?0000   Abs CTRTYPE                                          
+?3D20   Abs EMPTY_AT                                         
+?037A   Abs LEN0                                             
+?037B   Abs LEN1                                             
+?037C   Abs LEN2                                             
+?037D   Abs LEN3                                             
+?0004   Abs OFFX                                             
+?0004   Abs OFFY                                             
+ 3101   Abs PATCH_AT                                         
+?2FC9   Abs SEND_CSW                                         
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
