@@ -1,15 +1,29 @@
 SRC	=	main.c
 OBJ	=	main.o
-FLAGS	=	-g
+CFLAGS	=	-g -Wall -Werror
 LIBS	=
 
-all:	libst2205/libst2205.so setpic/setpic phack splice bgrep
+UNAME := $(shell uname)
+
+ifeq ($(UNAME), Linux)
+    OS_DEPS := libst2205.so
+else ifeq ($(UNAME), Darwin)
+    # Add macOS-specific dependencies
+    OS_DEPS := libst2205.dylib
+else
+    $(error Unsupported operating system: $(UNAME))
+endif
+
+all:	$(OS_DEPS) setpic/setpic phack splice bgrep
 
 install: all
 	make -C libst2205 install
 
-libst2205/libst2205.so:
-	make -C libst2205
+libst2205.dylib:
+	make -C libst2205 $@
+
+libst2205.so:
+	make -C libst2205 $@
 
 setpic/setpic:
 	make -C setpic

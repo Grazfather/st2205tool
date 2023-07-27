@@ -26,7 +26,7 @@
 #include <unistd.h>
 #include <stdio.h>
 #include <stdlib.h>
-#include <asm/fcntl.h>
+#include <fcntl.h>
 #include "st2205.h"
 
 #define BUFF_SIZE 0x10000
@@ -37,33 +37,13 @@
  Two routines to allocate/deallocate page-aligned memory, for use with the
  O_DIRECT-opened files.
 */
-static void *malloc_aligned(long size)
-{
-	int f;
-	void *buff;
-
-	f = open("/dev/zero", O_RDONLY);
-
-	if (f < 0) {
-		perror("Can't open /dev/zero:");
-		return NULL;
-	}
-
-	buff = mmap(0, size, PROT_READ | PROT_WRITE, MAP_PRIVATE, f, 0);
-
-	close(f);
-
-	return buff;
+void *malloc_aligned(long size) {
+    return mmap(NULL, size, PROT_READ | PROT_WRITE, MAP_PRIVATE | MAP_ANON, -1, 0);
 }
 
-static void free_aligned(void *addr, long size)
-{
-	/* To ignore free_aligned() on NULL addr like free() does */
-	if (addr != NULL)
-		if (munmap(addr, size) < 0)
-			perror(NULL);
+void free_aligned(void *addr, long size) {
+    munmap(addr,size);
 }
-
 
 typedef struct {
 	char sig[4];
@@ -464,10 +444,15 @@ st2205_handle *st2205_open(const char *dev)
 	int fd;
 	void *buff = NULL;
 
-	fd = open(dev, O_RDWR | O_DIRECT);
+	fd = open(dev, O_RDWR);
 
 	if (fd < 0) {
 		perror(dev);
+		return NULL;
+	}
+
+	if (fcntl(r->fd, F_NOCACHE, 1) < 0) {
+		perror("Unable to set NOCACHE on fd");
 		return NULL;
 	}
 

@@ -23,7 +23,7 @@
 #include <stdlib.h>
 #include <sys/types.h>
 #include <sys/stat.h>
-#include <asm/fcntl.h>
+#include <fcntl.h>
 #include <dirent.h>
 #include <sys/mman.h>
 
@@ -34,15 +34,10 @@ O_DIRECT-opened files.
 */
 
 void *malloc_aligned(long size) {
-    int f;
-    char *buff;
-    f=open("/dev/zero",O_RDONLY);
-    buff=mmap(0,size,PROT_READ|PROT_WRITE,MAP_PRIVATE,f,0);
-    close(f);
-    return buff;
+    return mmap(NULL, size, PROT_READ | PROT_WRITE, MAP_PRIVATE | MAP_ANON, -1, 0);
 }
 
-int free_aligned(void *addr, long size) {
+void free_aligned(void *addr, long size) {
     munmap(addr,size);
 }
 
@@ -52,12 +47,12 @@ Checks if the device is a photo frame by reading the first 512 bytes and
 comparing against the known string that's there
 */
 int is_photoframe(int f) {
-    int y,res;
+    int res;
     char id[]="SITRONIX CORP.";
     char *buff;
     buff=malloc_aligned(0x200);
     lseek(f,0x0,SEEK_SET);
-    y=read(f,buff,0x200);
+    read(f,buff,0x200);
     buff[15]=0;
 //    fprintf(stderr,"ID=%s\n",buff);
     res=strcmp(buff,id)==0?1:0;
@@ -108,12 +103,12 @@ int tst(int f) {
     return write(f,buff,0x200);
 }
 
-int read_data(int f, char* buff, int len) {
+int read_data(int f, unsigned char* buff, int len) {
     lseek(f,POS_RDAT,SEEK_SET);
     return read(f,buff,len);
 }
 
-int write_data(int f,char* buff, int len) {
+int write_data(int f,unsigned char* buff, int len) {
     lseek(f,0x6600,SEEK_SET);
     return write(f,buff,len);
 }
@@ -155,7 +150,7 @@ void dumpmem(unsigned char* mem, int len) {
 #define M_LCD   6
 
 int main(int argc, char** argv) {
-    int f,o;
+    int f,o=-1;
     unsigned int x,y;
     int mode=0;
     unsigned char *buff;
@@ -188,10 +183,20 @@ int main(int argc, char** argv) {
     }
 
     //open the device
+    char *dev;
     if (argc>=4) {
-	f=open(argv[3],O_RDWR|O_DIRECT|O_SYNC);
+	dev = argv[3];
     } else {
-	f=open("/dev/sda",O_RDWR|O_DIRECT|O_SYNC);
+	dev = "/dev/sda";
+    }
+    f=open(dev,O_RDWR|O_SYNC);
+    if (f < 0) {
+	perror("Can't open device");
+	exit(1);
+    }
+    if (fcntl(f, F_NOCACHE, 1) < 0) {
+	printf("Can't set NOCACHE on device\n");
+	exit(1);
     }
 
     //check if dev really is a photo-frame
@@ -285,7 +290,7 @@ int main(int argc, char** argv) {
 	//Debug-feature? A message consisting of 10 bytes can be written to the
 	//lcd. No hacked firmware is necessary for this.
 	sendcmd(f,9,0,0,0);
-	strcpy(buff,argv[2]);
+	strcpy((char *)buff,argv[2]);
 	write_data(f,buff,0x200);
 	printf("Message written.\n");
     }

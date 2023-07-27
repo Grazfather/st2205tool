@@ -6,7 +6,11 @@ LIBS	=
 
 all:   libst2205.so
 
-libst2205.so:	$(OBJ) $(SRC) $(HEADERS)
+libst2205.dylib: $(OBJ) $(SRC) $(HEADERS)
+	ar -rv libst2205.a $(OBJ)
+	gcc -dynamiclib -o libst2205.dylib $(OBJ) $(LIBS)
+
+libst2205.so: $(OBJ) $(SRC) $(HEADERS)
 	ar -rv libst2205.a $(OBJ)
 	gcc -shared -Wl,-soname,libst2205.so.1 -o libst2205.so $(OBJ) $(LIBS)
 
