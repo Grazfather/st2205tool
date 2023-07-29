@@ -58,6 +58,11 @@ else
     cp $2 fwimage.bin || exit 1
 fi
 
+echo "Checking for hacked firmware..."
+if ./bgrep fwimage.bin hack/H4CK.bin | grep -q .; then
+    echo "Detected you are already running hacked firmware!"
+    exit 0
+fi
 
 match=false;
 echo "Looking for a known device profile..."
