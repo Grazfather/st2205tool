@@ -65,9 +65,6 @@ int sendpic(st2205_handle *h, char* filename) {
                 g=gdImageGreen(im,c);
                 b=gdImageBlue(im,c);
             }
-//            pixels[p++]=0xff;
-//            pixels[p++]=0;
-//            pixels[p++]=0;
             pixels[p++]=r;
             pixels[p++]=g;
             pixels[p++]=b;
@@ -140,7 +137,9 @@ void testpic(st2205_handle *h, char* what) {
         } else if (c=='r') {
             h->offx++;
         } else if (c=='t') {
-            if (h->bpp==12) h->bpp=16; else h->bpp=12;
+            if (h->bpp==12) h->bpp=16;
+            else if (h->bpp==16) h->bpp=24;
+            else h->bpp = 12;
         }
         printf(" pressed\nCurrent settings: offx=%i offy=%i bpp=%i\n",h->offx,h->offy,h->bpp);
         sendpic(h,what);
