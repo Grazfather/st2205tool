@@ -1,0 +1,132 @@
+Crasm 1.11:                                                   page  1
+
+                         1      CPU 65c02
+                         2      OUTPUT HEX
+                         3      INCLUDE spec
+  6E16                   4      * = PATCH_AT+$4000
+                         5  
+                         6  ;Look for this bit to patch.
+6E16 A9FF                7      LDA #$FF
+6E18 A2FF                8      LDX #$FF
+6E1A 8D8903              9      STA CMP_VAR1
+6E1D 8E8A03             10      STX CMP_VAR2
+6E20 60                 11      RTS
+                        12  
+
+ERRORS:       0
+WARNINGS:     0
+
+Successful assembly...
+ Last address     6e20 (28192)
+ Code length        16 (22)
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+Crasm 1.11:                                                   page  2
+
+ 0389   Abs CMP_VAR1                                         
+ 038A   Abs CMP_VAR2                                         
+?0010   Abs CONF_BPP                                         
+?0000   Abs CONF_PROTO                                       
+?0080   Abs CONF_XRES                                        
+?0080   Abs CONF_YRES                                        
+?0000   Abs CTRTYPE                                          
+?3AA0   Abs EMPTY_AT                                         
+?037B   Abs LEN0                                             
+?037C   Abs LEN1                                             
+?037D   Abs LEN2                                             
+?037E   Abs LEN3                                             
+?0000   Abs OFFX                                             
+?0000   Abs OFFY                                             
+ 2E16   Abs PATCH_AT                                         
+?2CDE   Abs SEND_CSW                                         
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+

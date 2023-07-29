@@ -1,0 +1,132 @@
+Crasm 1.11:                                                   page  1
+
+                         1      CPU 65c02
+                         2      OUTPUT HEX
+                         3      INCLUDE spec
+  6E16                   4      * = PATCH_AT+$4000
+                         5  
+                         6  ;This gets patched into the existing usb routine
+ s.
+6E16 4CA07A              7      jmp EMPTY_AT+$4000
+6E19 EA                  8      nop
+                         9  
+
+ERRORS:       0
+WARNINGS:     0
+
+Successful assembly...
+ Last address     6e19 (28185)
+ Code length         8 (8)
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+Crasm 1.11:                                                   page  2
+
+?0389   Abs CMP_VAR1                                         
+?038A   Abs CMP_VAR2                                         
+?0010   Abs CONF_BPP                                         
+?0000   Abs CONF_PROTO                                       
+?0080   Abs CONF_XRES                                        
+?0080   Abs CONF_YRES                                        
+?0000   Abs CTRTYPE                                          
+ 3AA0   Abs EMPTY_AT                                         
+?037B   Abs LEN0                                             
+?037C   Abs LEN1                                             
+?037D   Abs LEN2                                             
+?037E   Abs LEN3                                             
+?0000   Abs OFFX                                             
+?0000   Abs OFFY                                             
+ 2E16   Abs PATCH_AT                                         
+?2CDE   Abs SEND_CSW                                         
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
