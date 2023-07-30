@@ -64,7 +64,7 @@ int is_photoframe(int f) {
 The interface works by writing bytes to the raw 'disk' at certain positions.
 Commands go to offset 0x6200, data to be read from the device comes from 0xB000,
 data to be written goes to 0x6600. Hacked firmware has an extra address,
-0x4200: bytes written there will go straight to the LCD.
+0x4400: bytes written there will go straight to the LCD.
 */
 
 #define POS_CMD 0x6200
