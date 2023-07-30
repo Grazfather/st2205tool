@@ -44,7 +44,7 @@ nomagic lda #$ff
 gotcha  lda #$04
 	sta $73
 
-;Push registers	
+;Push registers
 	lda $35
 	pha
 
@@ -192,7 +192,7 @@ packetend sec
 	ora LEN0
 	beq nowaitpacket
 	jmp waitpacket
-	
+
 ;restore registers
 nowaitpacket	pla
 	sta $35
@@ -213,6 +213,6 @@ nowaitpacket	pla
 	db CONF_XRES
 	db CONF_YRES
 	db CONF_BPP
-	db CONF_PROTO	
+	db CONF_PROTO
 	db OFFX
 	db OFFY
